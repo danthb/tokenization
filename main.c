@@ -3,6 +3,246 @@
 #include <string.h>
 #include <ctype.h>
 
+
+int hexaValidation(char *inputString, int start){
+	
+	int counter = 0;
+	int i = start;
+
+	if(inputString[start] != '0'){
+		return 0;
+	}
+	i++;
+	counter++;
+
+	if((tolower(inputString[i])!='x')){
+		return 0;
+	}
+	i++;
+	counter++;
+
+	while((isdigit((int)inputString[i])) || (tolower(inputString[i])=='a')
+		|| (tolower(inputString[i])=='b') || (tolower(inputString[i])=='c')
+		|| (tolower(inputString[i])=='d') || (tolower(inputString[i])=='e')){
+		counter++;
+		i++;
+	}
+
+	return counter;
+}
+
+int octalValidation(char *inputString, int start){
+	int counter = 0;
+	int i = start;
+
+	if(inputString[start] != '0'){
+		return 0;
+	}
+	i++;
+	counter++;
+	while(isdigit((int)inputString[i])){
+		if((inputString[i])=='8' || (inputString[i])=='9'){
+			return 0;
+		}
+		else{
+			counter++;
+			i++;
+
+		}
+	}
+	return counter;
+}
+
+int decimalValidation(char *inputString, int start){
+	int counter = 0;
+	int i = start;
+
+	if(inputString[start] == '0'){
+		return 0;
+	}
+
+	while(isdigit((int)inputString[i])){	
+			counter++;
+			i++;
+	}
+
+	return counter;
+}
+
+int floatValidation(char *inputString, int start){
+	int counter;
+	int i,j = start;
+	int dot = 0;
+	int sign = 0;
+	int exp_simbol = 0;
+	int int_value  = 0;
+	
+	if(inputString[start]=="."){
+		return 0;
+	}
+
+	if(inputString[start]=="0" && inputString[start]!="."){
+		return 0;
+	}
+
+	while( isdigit((int)inputString[i]) || inputString[i]== "." || 	
+			tolower((int)inputString[i]) == 'e' || inputString[i]== "-" || 
+			inputString[i]== "+")
+	{
+		
+		if(isdigit(inputString[i])){
+			int_value++;
+		}
+		if (inputString[i]== ".")
+		{
+			dot++;
+		}
+		if (inputString[i]== "e")
+		{
+			exp_simbol++;
+		}
+		if (inputString[i]== "-" || inputString[i]== "+")
+		{
+			sign++;
+		}
+		if ( dot == 2 || exp_simbol == 2 || sign == 2){
+			break;
+		}
+
+		if ( dot < exp_simbol || dot < sign || exp_simbol < sign){
+			break;
+		}
+
+		counter++;
+		i++;
+	}
+
+	if(counter == int_value){
+		return 0;
+	}
+
+	return counter;
+
+}
+
+int wordValidation(char *inputString, int start){
+	int counter;
+	int i = start;
+
+	if(isdigit(inputString[start])){
+		return 0; 
+	}
+	while(isalpha(inputString[i])){
+		counter++;
+		i++;
+	}
+
+	return counter;
+
+}
+
+
+int simbCounter(char *inputString, int start){
+	int i = start;
+	int counter;
+
+	while(isdigit((int) inputString[i]) == 0  || isalpha((int) inputString[i]) == 0){
+		i++;
+		counter++;
+	}
+	return counter;
+}
+
+void oneSimbol(char *inputString, int start, int simbCounter){
+	int i = start;
+	switch (inputString[i])
+	{
+	case '(':
+		printf("left parenthesis");
+		break;
+	case ')':
+		printf("right parenthesis");
+		break;
+	case '[':
+		printf("left bracket");
+		break;	
+	case ']':
+		printf("right bracket");
+		break;	
+	case ',':
+		printf("comma");
+		break;
+	case '?':
+		printf("conditional true");
+		break;	
+	case ':':
+		printf("conditional false");
+		break;	
+	case '~':
+		printf("1s complement");
+		break;	
+	case '^':
+		if(simbCounter == 1){printf("bitwise XOR");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("bitwise XOR equals");}
+		break;
+	case '*':
+		if(simbCounter == 1){printf("multiply/dereference operator");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("times equals");}
+		break;
+	case '!':
+		if(simbCounter == 1){printf("negate");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("inequality test");}
+		break;	
+	case '%':
+		if(simbCounter == 2 && inputString[i+1] == '='){printf("mod equals");}
+		break;	
+	case '|':
+		if(simbCounter == 1){printf("bitwise OR");}
+		else if(simbCounter == 2 && inputString[i+1] == '|'){printf("logical OR");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("bitwise OR equals");}
+		break;	
+	case '+':
+		if(simbCounter == 1){printf("addition");}
+		else if(simbCounter == 2 && inputString[i+1] == '+'){printf("increment");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("plus equals");}
+		break;
+	case '/':
+		if(simbCounter == 1){printf("division");}
+		else if(simbCounter == 2 && inputString[i+1] == '/'){printf("sizeof");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("divide equals");}
+		break;
+	case '< ':
+		if(simbCounter == 1){printf("less than test");}
+		else if(simbCounter == 2 && inputString[i+1] == '<'){printf("shift left");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("less than or equal test");}
+		else if(simbCounter == 3 && inputString[i+2] == '='){printf("shift left equals");}
+	case '>':
+		if(simbCounter == 1){printf("greater than test");}
+		else if(simbCounter == 2 && inputString[i+1] == '>'){printf("shift right");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("greater than or equal test");}
+		else if(simbCounter == 3 && inputString[i+2] == '='){printf("shift right equals");}
+		break;		
+	case '=':
+		if(simbCounter == 1){printf("assignment");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("equality test");}
+		break;	
+	case '&':
+		if(simbCounter == 1){printf("AND/address operator");}
+		else if(simbCounter == 2 && inputString[i+1] == '&'){printf("logical AND");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("bitwise AND equals");}
+		break;	
+	case '-':
+		if(simbCounter == 1){printf("minus/subtract operator");}
+		else if(simbCounter == 2 && inputString[i+1] == '-'){printf("decrement");}
+		else if(simbCounter == 2 && inputString[i+1] == '='){printf("minus equals");}
+		else if(simbCounter == 2 && inputString[i+1] == '>'){printf("structure pointer");}
+		break;	
+	default:
+		break;
+	}
+
+}
+
 void deepReading(char *inputString){
 	int i=0;
 	char change = 0;
@@ -10,60 +250,19 @@ void deepReading(char *inputString){
 	printf("\nString: %s\n", inputString);
 	for (i = 0; i < len; i++){
 		int j = i+1;
-		if(change==0){
 
-			if(isdigit(inputString[i])){
-				//printf("%d  ", i);
-				//printf("numero\n");
-				printf("%c", inputString[i]);
-				// Float point
-				if(inputString[j] == 46 ){
-					change = 0;
-				}
-				//Hexa
-				else if((inputString[j] == 88) || (inputString[j] == 120)){
-					change = 0;
-					
-				}
-				//Decimal number
-				else if(isdigit(inputString[i]) == isdigit(inputString[j])){
-					change=0;
-				}else{
-					change=1;
-				}
-			}
-			else if(isalpha(inputString[i])){
-				//printf("%d  ", i);
-				//printf("letra\n");
-				printf("%c", inputString[i]);
-				if(isalpha(inputString[i]) == isalpha(inputString[j])){
-					change=0;
-				}else if(isdigit(inputString[j])){
-					change=0;
-				}
-				//If it is necessary to separate alphanumeric and integer 
-				else{
-					change=1;
-				}
-				
-			}
-			else{
-				//printf("simbolo\n");
-				printf("%c", inputString[i]);
-				if(isdigit(inputString[j])){
-					change=0;
-					
-				}else if (isalpha(inputString[j])){
-					change=1;
-				}
-			}
-		//In order to set the separation of strings	
-		}else{
-			i--;
-			printf("\n******change******\n");
-			change = 0;
+		if(isdigit(inputString[i])){
 
 		}
+		else if(isalpha(inputString[i])){
+
+				
+		}
+		else{
+
+		}
+		
+		
 	}
 	printf("\n");
 
