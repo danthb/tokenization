@@ -13,19 +13,25 @@ int hexaValidation(char *inputString, int start){
 		return 0;
 	}
 	i++;
-	counter++;
+	//counter++;
 
-	if((tolower(inputString[i])!='x')){
+	if((tolower(inputString[start+1])!='x')){
 		return 0;
 	}
 	i++;
-	counter++;
-
+	//counter++;
+	
 	while((isdigit((int)inputString[i])) || (tolower(inputString[i])=='a')
 		|| (tolower(inputString[i])=='b') || (tolower(inputString[i])=='c')
 		|| (tolower(inputString[i])=='d') || (tolower(inputString[i])=='e')){
-		counter++;
-		i++;
+		if(i==2){
+			counter = 3;
+			i++;
+		}
+		else{
+			counter++;
+			i++;
+		}
 	}
 
 	return counter;
@@ -39,14 +45,20 @@ int octalValidation(char *inputString, int start){
 		return 0;
 	}
 	i++;
-	counter++;
+	//counter++;
 	while(isdigit((int)inputString[i])){
 		if((inputString[i])=='8' || (inputString[i])=='9'){
 			return 0;
 		}
 		else{
-			counter++;
-			i++;
+			if(i==1){
+				counter = 2;
+				i++;
+			}
+			else{
+				counter++;
+				i++;
+			}
 
 		}
 	}
@@ -85,7 +97,7 @@ int floatValidation(char *inputString, int start){
 		return 0;
 	}
 
-	while( isdigit((int)inputString[i]) || inputString[i]== "." || 	
+	while( isdigit((int)inputString[i]) || inputString[i]== '.' || 	
 			tolower((int)inputString[i]) == 'e' || inputString[i]== "-" || 
 			inputString[i]== "+")
 	{
@@ -153,7 +165,7 @@ int simbCounter(char *inputString, int start){
 	return counter;
 }
 
-void oneSimbol(char *inputString, int start, int simbCounter){
+void simbolValid(char *inputString, int start, int simbCounter){
 	int i = start;
 	switch (inputString[i])
 	{
@@ -242,6 +254,8 @@ void oneSimbol(char *inputString, int start, int simbCounter){
 	}
 
 }
+
+// Here, it is necessary to add the logic to call each function
 
 void deepReading(char *inputString){
 	int i=0;
