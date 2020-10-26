@@ -3,27 +3,22 @@
 #include <string.h>
 #include <ctype.h>
 
-
-int hexaValidation(char *inputString, int start){
-	
+int hexaValidation(char *inputString, int start){	
 	int counter = 0;
 	int i = start;
-
 	if(inputString[start] != '0'){
 		return 0;
 	}
 	i++;
-	//counter++;
 
 	if((tolower(inputString[start+1])!='x')){
 		return 0;
 	}
 	i++;
-	//counter++;
-	
-	while((isdigit((int)inputString[i])) || (tolower(inputString[i])=='a')
-		|| (tolower(inputString[i])=='b') || (tolower(inputString[i])=='c')
-		|| (tolower(inputString[i])=='d') || (tolower(inputString[i])=='e')){
+
+	while((isdigit((int)inputString[i])) || (tolower(inputString[i]) == 'a')
+		|| (tolower(inputString[i]) == 'b') || (tolower(inputString[i]) == 'c')
+		|| (tolower(inputString[i]) == 'd') || (tolower(inputString[i]) == 'e')){
 		if(i==2){
 			counter = 3;
 			i++;
@@ -33,7 +28,6 @@ int hexaValidation(char *inputString, int start){
 			i++;
 		}
 	}
-
 	return counter;
 }
 
@@ -45,8 +39,8 @@ int octalValidation(char *inputString, int start){
 		return 0;
 	}
 	i++;
-	//counter++;
-	while(isdigit((int)inputString[i])){
+
+	while(isdigit(inputString[i])){
 		if((inputString[i])=='8' || (inputString[i])=='9'){
 			return 0;
 		}
@@ -59,7 +53,6 @@ int octalValidation(char *inputString, int start){
 				counter++;
 				i++;
 			}
-
 		}
 	}
 	return counter;
@@ -68,97 +61,103 @@ int octalValidation(char *inputString, int start){
 int decimalValidation(char *inputString, int start){
 	int counter = 0;
 	int i = start;
-
-	if(inputString[start] == '0'){
+	/*if(inputString[start] == '0'){
 		return 0;
-	}
+	}*/
 
-	while(isdigit((int)inputString[i])){	
-			counter++;
-			i++;
+	while(isdigit((int)inputString[i])){
+		if(inputString[i+1] == '.'){
+		    return 0;
+		}
+		counter++;
+		i++;
 	}
-
+	
 	return counter;
 }
 
 int floatValidation(char *inputString, int start){
 	int counter;
-	int i,j = start;
+	int i = start;
 	int dot = 0;
 	int sign = 0;
 	int exp_simbol = 0;
 	int int_value  = 0;
 	
-	if(inputString[start]=="."){
+	if(inputString[start] == '.'){
 		return 0;
 	}
 
-	if(inputString[start]=="0" && inputString[start]!="."){
+	if(inputString[start] =='0' && inputString[start+1] != '.'){
 		return 0;
 	}
 
-	while( isdigit((int)inputString[i]) || inputString[i]== '.' || 	
-			tolower((int)inputString[i]) == 'e' || inputString[i]== "-" || 
-			inputString[i]== "+")
-	{
-		
-		if(isdigit(inputString[i])){
+	while( isdigit((int)inputString[i]) || inputString[i] == '.' || tolower(inputString[i]) == 'e' || inputString[i] == '-' || inputString[i] == '+'){
+		if(isdigit((int)inputString[i]))
+		{
 			int_value++;
+			
+
 		}
-		if (inputString[i]== ".")
+		if (inputString[i]== '.')
 		{
 			dot++;
 		}
-		if (inputString[i]== "e")
+	    if (inputString[i]== 'e')
 		{
 			exp_simbol++;
 		}
-		if (inputString[i]== "-" || inputString[i]== "+")
+		if (inputString[i] == '-' || inputString[i] == '+')
 		{
 			sign++;
 		}
+		
+		counter++;
+		i++;
+		
 		if ( dot == 2 || exp_simbol == 2 || sign == 2){
+		    printf("dothola");
 			break;
 		}
 
 		if ( dot < exp_simbol || dot < sign || exp_simbol < sign){
+		    printf("dothola");
 			break;
 		}
-
-		counter++;
-		i++;
 	}
 
 	if(counter == int_value){
 		return 0;
 	}
-
 	return counter;
-
 }
 
 int wordValidation(char *inputString, int start){
 	int counter;
 	int i = start;
 
-	if(isdigit(inputString[start])){
-		return 0; 
-	}
-	while(isalpha(inputString[i])){
-		counter++;
+	if(isalpha(inputString[start]) != 0){
 		i++;
 	}
 
+	while(isalpha(inputString[i]) != 0  || isdigit(inputString[i]) != 0){
+		if(i == (start+1)){
+			// check
+			counter = 2;
+		}
+		counter++;
+		i++;
+	}
+	counter = counter -1;
 	return counter;
 
 }
-
 
 int simbCounter(char *inputString, int start){
 	int i = start;
 	int counter;
 
-	while(isdigit((int) inputString[i]) == 0  || isalpha((int) inputString[i]) == 0){
+	while(isalpha(inputString[i]) == 0  && isdigit(inputString[i]) == 0  && inputString[i] != '\0'){
 		i++;
 		counter++;
 	}
@@ -223,11 +222,12 @@ void simbolValid(char *inputString, int start, int simbCounter){
 		else if(simbCounter == 2 && inputString[i+1] == '/'){printf("sizeof");}
 		else if(simbCounter == 2 && inputString[i+1] == '='){printf("divide equals");}
 		break;
-	case '< ':
+	case '<':
 		if(simbCounter == 1){printf("less than test");}
 		else if(simbCounter == 2 && inputString[i+1] == '<'){printf("shift left");}
 		else if(simbCounter == 2 && inputString[i+1] == '='){printf("less than or equal test");}
 		else if(simbCounter == 3 && inputString[i+2] == '='){printf("shift left equals");}
+		break;
 	case '>':
 		if(simbCounter == 1){printf("greater than test");}
 		else if(simbCounter == 2 && inputString[i+1] == '>'){printf("shift right");}
@@ -252,38 +252,66 @@ void simbolValid(char *inputString, int start, int simbCounter){
 	default:
 		break;
 	}
-
 }
 
-// Here, it is necessary to add the logic to call each function
+void print_substrings(char *inputString, int start, int end){
+	for(int i = start; i <= end; i++){
+		printf("%c",inputString[i]);
+	}
+}
 
+// Split the substrings in subtrings if these are joined
 void deepReading(char *inputString){
-	int i=0;
-	char change = 0;
+	int counter = 0 ;
+	int endString = 0;
 	int len = strlen(inputString);
-	printf("\nString: %s\n", inputString);
-	for (i = 0; i < len; i++){
-		int j = i+1;
-
-		if(isdigit(inputString[i])){
+	while(endString <= len && inputString[endString] != '\0' ){
+		if(isdigit(inputString[endString])){
+			
+			if(hexaValidation(inputString, endString)){
+				printf("Hexadecimal:  ");
+				counter = hexaValidation(inputString,endString);
+				print_substrings(inputString, endString, counter);
+				endString = endString + counter ;
+			}
+			else if (octalValidation(inputString,endString)){
+				printf("Octal: ");
+				counter = octalValidation(inputString,endString);
+				print_substrings(inputString, endString, counter);
+				endString = endString + counter ;
+			}
+			else if (decimalValidation(inputString,endString)){
+				printf("Decimal: ");
+				counter = decimalValidation(inputString,endString);
+				print_substrings(inputString, endString, counter);
+				endString = endString + counter ;
+			}
+			else if (floatValidation(inputString,endString)){
+				printf("Float ");
+				counter = floatValidation(inputString,endString);
+				print_substrings(inputString, endString, counter);	
+				endString = endString + counter;
+			}
 
 		}
-		else if(isalpha(inputString[i])){
-
-				
+		else if(isalpha(inputString[endString])){
+			printf("Word: ");
+			counter = wordValidation(inputString,endString);
+			print_substrings(inputString, endString, counter);
+			endString = endString + counter;
 		}
 		else{
-
+			printf("Simbol: ");
+			counter = simbCounter(inputString,endString);
+			simbolValid(inputString, endString, counter);
+			endString = endString + counter;
 		}
-		
-		
 	}
 	printf("\n");
 
 }
 
 int readingString(char *inputString, char whiteBlank, char ***outputString){
-
 	int len = strlen(inputString);
 	int numberString = 1;
 	char **currentString;
@@ -325,14 +353,12 @@ int main(int argc, char* argv[1]) {
 	int numberString;
 	int i;
     numberString = readingString(argv[1], ' ', &strings);
-
-
-	// Loop for deepReading when the strings are joined with each other
+	
+	// Loop for spliting subtrings 
 	for (i = 0; i <numberString; i++)
 	{
 		deepReading(strings[i]);
 	}
-	
 	free(strings);
 	return 0;
 }
