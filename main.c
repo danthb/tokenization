@@ -72,12 +72,11 @@ int decimalValidation(char *inputString, int start){
 		counter++;
 		i++;
 	}
-	
 	return counter;
 }
 
 int floatValidation(char *inputString, int start){
-	int counter;
+	int counter = 0;
 	int i = start;
 	int dot = 0;
 	int sign = 0;
@@ -88,16 +87,15 @@ int floatValidation(char *inputString, int start){
 		return 0;
 	}
 
-	if(inputString[start] =='0' && inputString[start+1] != '.'){
+	if(inputString[start] == '0' && inputString[start+1] != '.'){
 		return 0;
 	}
 
-	while( isdigit((int)inputString[i]) || inputString[i] == '.' || tolower(inputString[i]) == 'e' || inputString[i] == '-' || inputString[i] == '+'){
-		if(isdigit((int)inputString[i]))
+	while( isdigit(inputString[i]) || inputString[i] == '.' || tolower(inputString[i]) == 'e' || inputString[i] == '-' || inputString[i] == '+'){
+		
+		if(isdigit(inputString[i]))
 		{
 			int_value++;
-			
-
 		}
 		if (inputString[i]== '.')
 		{
@@ -107,7 +105,7 @@ int floatValidation(char *inputString, int start){
 		{
 			exp_simbol++;
 		}
-		if (inputString[i] == '-' || inputString[i] == '+')
+		if (inputString[i]== '-' || inputString[i]== '+')
 		{
 			sign++;
 		}
@@ -116,14 +114,14 @@ int floatValidation(char *inputString, int start){
 		i++;
 		
 		if ( dot == 2 || exp_simbol == 2 || sign == 2){
-		    printf("dothola");
 			break;
 		}
 
 		if ( dot < exp_simbol || dot < sign || exp_simbol < sign){
-		    printf("dothola");
 			break;
 		}
+
+
 	}
 
 	if(counter == int_value){
@@ -267,7 +265,6 @@ void deepReading(char *inputString){
 	int len = strlen(inputString);
 	while(endString <= len && inputString[endString] != '\0' ){
 		if(isdigit(inputString[endString])){
-			
 			if(hexaValidation(inputString, endString)){
 				printf("Hexadecimal:  ");
 				counter = hexaValidation(inputString,endString);
@@ -289,6 +286,7 @@ void deepReading(char *inputString){
 			else if (floatValidation(inputString,endString)){
 				printf("Float ");
 				counter = floatValidation(inputString,endString);
+				//printf("%d", counter);
 				print_substrings(inputString, endString, counter);	
 				endString = endString + counter;
 			}
